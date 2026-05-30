@@ -1,0 +1,587 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans)}
+.app{padding:1.5rem 0;max-width:680px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border-width:0}
+.screen{display:none}.screen.active{display:block}
+.badge{display:inline-block;font-size:12px;padding:3px 10px;border-radius:var(--border-radius-md);margin-bottom:.5rem}
+.bp{background:#EEEDFE;color:#3C3489}
+.bt{background:#E1F5EE;color:#085041}
+.ba{background:#FAEEDA;color:#633806}
+.bc{background:#FAECE7;color:#712B13}
+.bg{background:#F1EFE8;color:#444441}
+.bb{background:#E6F1FB;color:#0C447C}
+.bk{background:#EAF3DE;color:#27500A}
+.nav-wrap{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1.75rem;border-bottom:0.5px solid var(--color-border-tertiary);padding-bottom:1rem}
+.nav-btn{font-size:13px;padding:5px 12px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);cursor:pointer;background:var(--color-background-primary);color:var(--color-text-secondary)}
+.nav-btn.active{background:#EEEDFE;border-color:#AFA9EC;color:#3C3489;font-weight:500}
+.nav-btn:hover{border-color:var(--color-border-secondary)}
+.hdr{text-align:center;margin-bottom:2rem}
+.hdr h1{font-size:22px;font-weight:500;color:var(--color-text-primary);margin-bottom:.4rem}
+.hdr p{font-size:14px;color:var(--color-text-secondary);line-height:1.6}
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem;margin-bottom:1rem}
+.card-t{font-size:15px;font-weight:500;color:var(--color-text-primary);margin-bottom:.4rem}
+.card-b{font-size:14px;color:var(--color-text-secondary);line-height:1.7}
+.note{background:var(--color-background-secondary);border-left:3px solid #CECBF6;border-radius:0 var(--border-radius-md) var(--border-radius-md) 0;padding:.7rem 1rem;margin:.6rem 0;font-size:13px;color:var(--color-text-secondary);line-height:1.6}
+.note strong{color:var(--color-text-primary);font-weight:500}
+.arr-list{list-style:none;margin:.4rem 0}
+.arr-list li{font-size:14px;color:var(--color-text-secondary);padding:3px 0 3px 1.2rem;position:relative;line-height:1.5}
+.arr-list li::before{content:"→";position:absolute;left:0;color:#7F77DD}
+.warn-list{list-style:none;margin:.4rem 0}
+.warn-list li{font-size:14px;color:var(--color-text-secondary);padding:3px 0 3px 1.4rem;position:relative;line-height:1.5}
+.warn-list li::before{content:"⚠";position:absolute;left:0;font-size:11px;top:5px}
+.fbox{background:#EEEDFE;border-radius:var(--border-radius-md);padding:.7rem 1rem;margin-top:.6rem;font-size:13px;color:#3C3489;line-height:1.6}
+.fbox strong{font-weight:500}
+.btn{display:inline-block;padding:8px 18px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);font-size:14px;cursor:pointer;background:var(--color-background-primary);color:var(--color-text-primary);margin:.25rem .25rem 0 0;transition:background .15s}
+.btn:hover{background:var(--color-background-secondary)}
+.btn-p{background:#EEEDFE;border-color:#AFA9EC;color:#3C3489}
+.btn-p:hover{background:#CECBF6}
+.rgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:1.25rem}
+.rcard{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:.8rem 1rem;cursor:pointer;background:var(--color-background-primary);transition:border-color .2s}
+.rcard:hover{border-color:var(--color-border-secondary)}
+.rcard .rn{font-size:14px;font-weight:500;color:var(--color-text-primary);margin:.25rem 0 .15rem}
+.rcard .rt{font-size:12px;color:var(--color-text-secondary)}
+.rdet{display:none}.rdet.open{display:block}
+.ev-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:.9rem 1.1rem;margin-bottom:.75rem;cursor:pointer}
+.ev-card .et{font-size:14px;font-weight:500;color:var(--color-text-primary);margin:.25rem 0 0}
+.ev-card .ed{display:none;margin-top:.6rem;font-size:14px;color:var(--color-text-secondary);line-height:1.6}
+.ev-card.open .ed{display:block}
+.divider{border:none;border-top:0.5px solid var(--color-border-tertiary);margin:1.25rem 0}
+.ph-step{display:flex;gap:.9rem;margin-bottom:1rem;align-items:flex-start}
+.ph-num{min-width:26px;height:26px;border-radius:50%;background:#EEEDFE;color:#3C3489;font-size:13px;font-weight:500;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.ph-c .pt{font-size:14px;font-weight:500;color:var(--color-text-primary);margin-bottom:.15rem}
+.ph-c .pd{font-size:14px;color:var(--color-text-secondary);line-height:1.6}
+.sec-lbl{font-size:11px;font-weight:500;color:var(--color-text-secondary);letter-spacing:.05em;text-transform:uppercase;margin-bottom:.75rem}
+.prog-wrap{background:var(--color-background-secondary);border-radius:99px;height:5px;margin-bottom:1.5rem;overflow:hidden}
+.prog-fill{height:5px;border-radius:99px;background:#7F77DD;transition:width .35s}
+.prog-lbl{font-size:12px;color:var(--color-text-secondary);text-align:right;margin-bottom:.3rem}
+.q-block{margin-bottom:1.5rem}
+.q-num{font-size:12px;color:var(--color-text-secondary);margin-bottom:.3rem;font-weight:500}
+.q-txt{font-size:15px;font-weight:500;color:var(--color-text-primary);line-height:1.6;margin-bottom:.9rem}
+.q-note{font-size:13px;color:var(--color-text-secondary);background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.55rem .85rem;margin-bottom:.85rem;line-height:1.6}
+.opts{display:flex;flex-direction:column;gap:7px}
+.opt{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:.65rem .9rem;font-size:14px;color:var(--color-text-primary);cursor:pointer;background:var(--color-background-primary);text-align:left;line-height:1.5;transition:border-color .15s,background .15s}
+.opt:hover:not(:disabled){border-color:var(--color-border-secondary);background:var(--color-background-secondary)}
+.opt.correct{border-color:#1D9E75;background:#E1F5EE;color:#085041;cursor:default}
+.opt.wrong{border-color:#D85A30;background:#FAECE7;color:#712B13;cursor:default}
+.opt.missed{border-color:#1D9E75;background:#E1F5EE;color:#085041;cursor:default;opacity:.65}
+.opt:disabled{cursor:default}
+.open-inp{width:100%;font-size:14px;padding:.65rem .9rem;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);background:var(--color-background-primary);color:var(--color-text-primary);resize:vertical;min-height:80px;line-height:1.6;font-family:var(--font-sans)}
+.open-inp:focus{outline:none;border-color:#7F77DD}
+.open-inp:disabled{background:var(--color-background-secondary)}
+.fb{border-radius:var(--border-radius-md);padding:.9rem 1rem;margin-top:.8rem;font-size:14px;line-height:1.7;display:none}
+.fb.show{display:block}
+.fb-ok{background:#E1F5EE;border:0.5px solid #5DCAA5}
+.fb-no{background:#FAECE7;border:0.5px solid #F0997B}
+.fb-op{background:#EEEDFE;border:0.5px solid #AFA9EC}
+.fb-title{font-weight:500;margin-bottom:.35rem;font-size:14px}
+.fb-ok .fb-title{color:#085041}
+.fb-no .fb-title{color:#712B13}
+.fb-op .fb-title{color:#3C3489}
+.fb-body{color:var(--color-text-primary);font-size:14px;line-height:1.7}
+.fb-extra{margin-top:.55rem;color:var(--color-text-secondary);font-size:13px;border-top:0.5px solid rgba(0,0,0,.07);padding-top:.55rem;line-height:1.7}
+.assoc-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:.6rem}
+.assoc-clbl{font-size:11px;color:var(--color-text-secondary);font-weight:500;margin-bottom:.35rem;text-transform:uppercase;letter-spacing:.04em}
+.ai{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:.5rem .7rem;font-size:13px;cursor:pointer;background:var(--color-background-primary);color:var(--color-text-primary);text-align:left;line-height:1.4;margin-bottom:6px;transition:border-color .15s,background .15s;width:100%}
+.ai:hover:not(.matched):not(.sel){border-color:var(--color-border-secondary);background:var(--color-background-secondary)}
+.ai.sel{border-color:#7F77DD;background:#EEEDFE;color:#3C3489}
+.ai.matched{border-color:#1D9E75;background:#E1F5EE;color:#085041;cursor:default}
+.ai.wmatch{border-color:#D85A30;background:#FAECE7;color:#712B13}
+.score-panel{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1.5rem 1.25rem;text-align:center}
+.score-big{font-size:44px;font-weight:500;color:var(--color-text-primary);line-height:1}
+.score-sub{font-size:14px;color:var(--color-text-secondary);margin-top:.3rem}
+.score-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:1.1rem}
+.sc{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.7rem;text-align:center}
+.sc .sn{font-size:20px;font-weight:500;color:var(--color-text-primary)}
+.sc .sl{font-size:12px;color:var(--color-text-secondary);margin-top:2px}
+.score-msg{font-size:14px;line-height:1.6;margin-top:1rem}
+.dq{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.7rem 1rem;margin-bottom:.45rem;font-size:14px;color:var(--color-text-primary);cursor:pointer}
+.dq:hover{background:#EEEDFE;color:#3C3489}
+</style>
+
+<h2 class="sr-only">Westfalia 1648 — attività didattica completa: contesto, delegazioni, meccanica di gioco, carte evento, verifica e debrief</h2>
+
+<div class="app">
+<div class="hdr">
+  <div class="badge bp">attività completa · storia moderna</div>
+  <h1>Congresso di Westfalia, 1648</h1>
+  <p>Contesto · Delegazioni · Gioco · Carte evento · Verifica · Debrief</p>
+</div>
+
+<nav class="nav-wrap" aria-label="Sezioni">
+  <button class="nav-btn active" onclick="go('contesto',this)">Contesto</button>
+  <button class="nav-btn" onclick="go('delegazioni',this)">Delegazioni</button>
+  <button class="nav-btn" onclick="go('meccanica',this)">Meccanica</button>
+  <button class="nav-btn" onclick="go('eventi',this)">Carte evento</button>
+  <button class="nav-btn" onclick="go('verifica',this)">Verifica</button>
+  <button class="nav-btn" onclick="go('debrief',this)">Debrief</button>
+</nav>
+
+<div id="s-contesto" class="screen active">
+  <div class="card">
+    <div class="card-t">Siamo nel 1648</div>
+    <div class="card-b">L'Europa è devastata da trent'anni di guerra. Il conflitto, iniziato nel 1618 come scontro religioso nell'Impero, ha trascinato quasi tutte le potenze europee. Milioni di morti, città distrutte, economie al collasso. Ora i diplomatici sono riuniti in due città westfaliane — Münster e Osnabrück — per ridisegnare l'Europa.</div>
+  </div>
+  <div class="note"><strong>Nota:</strong> Il congresso si tenne in due sedi perché cattolici e protestanti si rifiutavano di condividere la stessa città. Una novità assoluta: prima di Westfalia non esisteva il formato del congresso diplomatico multilaterale. Le paci si firmavano bilateralmente tra due parti.</div>
+  <div class="card">
+    <div class="card-t">Tre fratture da risolvere</div>
+    <div class="card-b" style="margin-bottom:.5rem"><strong style="color:var(--color-text-primary)">1. Religiosa</strong> — Cattolici, Luterani e Calvinisti si combattono da decenni</div>
+    <div class="note" style="margin:.3rem 0"><strong>Nota:</strong> I Calvinisti seguono Giovanni Calvino (Ginevra, metà '500): sono protestanti, ma distinti dai Luterani. In Germania si chiamano "Riformati" e nel 1648 chiedono per la prima volta gli stessi diritti riconosciuti ai Luterani nel 1555.</div>
+    <div class="card-b" style="margin:.5rem 0"><strong style="color:var(--color-text-primary)">2. Territoriale</strong> — Chi controlla l'Alsazia? La Pomerania? I principati del nord?</div>
+    <div class="note" style="margin:.3rem 0"><strong>Nota:</strong> L'Alsazia è una regione sul Reno, oggi francese, allora contesa tra Francia e Asburgo. La Pomerania è sul Baltico, contesa tra Svezia e Brandeburgo (futuro nucleo della Prussia).</div>
+    <div class="card-b" style="margin-top:.5rem"><strong style="color:var(--color-text-primary)">3. Strutturale</strong> — Quanto potere hanno i principi tedeschi rispetto all'Imperatore?</div>
+  </div>
+  <div class="card">
+    <div class="card-t">L'obiettivo del gioco</div>
+    <div class="card-b">Ogni delegazione deve ottenere il massimo per il proprio stato. Ma una pace è necessaria: senza accordo la guerra ricomincia e tutti perdono. La vera sfida è negoziare — fare promesse, tenerle o tradirle, costruire alleanze instabili.</div>
+  </div>
+  <button class="btn btn-p" onclick="go('delegazioni',document.querySelectorAll('.nav-btn')[1])">Vai alle delegazioni →</button>
+</div>
+
+<div id="s-delegazioni" class="screen">
+  <p style="font-size:14px;color:var(--color-text-secondary);margin-bottom:1rem;line-height:1.6">Clicca su una delegazione per aprire la scheda completa. Ogni gruppo la studia prima del gioco.</p>
+  <div class="rgrid">
+    <div class="rcard" onclick="toggleRole('fr')"><div class="badge bt" style="margin-bottom:.2rem;font-size:11px;padding:2px 7px">Francia</div><div class="rn">Mazarino / Luigi XIV</div><div class="rt">potenza emergente</div></div>
+    <div class="rcard" onclick="toggleRole('se')"><div class="badge bt" style="margin-bottom:.2rem;font-size:11px;padding:2px 7px">Svezia</div><div class="rn">Cristina / Oxenstierna</div><div class="rt">vincitrice militare</div></div>
+    <div class="rcard" onclick="toggleRole('imp')"><div class="badge ba" style="margin-bottom:.2rem;font-size:11px;padding:2px 7px">Impero</div><div class="rn">Ferdinando III</div><div class="rt">potenza sconfitta</div></div>
+    <div class="rcard" onclick="toggleRole('sp')"><div class="badge bc" style="margin-bottom:.2rem;font-size:11px;padding:2px 7px">Spagna</div><div class="rn">Filippo IV</div><div class="rt">in declino</div></div>
+    <div class="rcard" onclick="toggleRole('pp')"><div class="badge bg" style="margin-bottom:.2rem;font-size:11px;padding:2px 7px">Stato Pontificio</div><div class="rn">Innocenzo X</div><div class="rt">mediatore religioso</div></div>
+    <div class="rcard" onclick="toggleRole('pr')"><div class="badge bg" style="margin-bottom:.2rem;font-size:11px;padding:2px 7px">Principi prot.</div><div class="rn">Brandeburgo, Sassonia…</div><div class="rt">autonomia o morte</div></div>
+  </div>
+
+  <div id="rd-fr" class="rdet">
+    <hr class="divider">
+    <div class="badge bt">Francia — Cardinale Mazarino</div>
+    <div class="note"><strong>Nota:</strong> Luigi XIV ha 10 anni nel 1648. Il potere è nelle mani di Mazarino, successore di Richelieu. La Francia è cattolica eppure combatte fianco ai protestanti contro l'Imperatore cattolico — uno dei paradossi centrali da discutere in classe.</div>
+    <ul class="arr-list">
+      <li>Ottenere l'Alsazia (o parte di essa) — sbocco sul Reno</li>
+      <li>Indebolire definitivamente gli Asburgo</li>
+      <li>Diventare la potenza egemone del continente</li>
+    </ul>
+    <ul class="warn-list">
+      <li>La Fronde è già nell'aria: instabilità interna grave</li>
+      <li>Non vuole un'Europa protestante dominata dalla Svezia</li>
+    </ul>
+    <div class="note"><strong>Nota — la Fronde:</strong> È la rivolta della nobiltà e dei parlamenti contro la monarchia (1648–1653). Esplode mentre il congresso è in corso. Da adulto Luigi XIV costruirà Versailles e il governo assoluto proprio per non ripetere questa umiliazione.</div>
+    <div class="fbox"><strong>Feedback:</strong> La Francia vince se ottiene territori sul Reno e divide gli Asburgo. Perde se si isola o se la Svezia diventa troppo forte. Deve usare la diplomazia, non la guerra diretta.</div>
+  </div>
+
+  <div id="rd-se" class="rdet">
+    <hr class="divider">
+    <div class="badge bt">Svezia — Oxenstierna</div>
+    <div class="note"><strong>Nota:</strong> La Svezia è la grande sorpresa militare del conflitto. Da piccolo regno nordico è diventata potenza baltica sotto Gustavo II Adolfo (morto nel 1632). Il Baltico nel '600 era ciò che il Mediterraneo era nel Medioevo: la principale arteria commerciale del nord Europa.</div>
+    <ul class="arr-list">
+      <li>Consolidare il controllo sul Mar Baltico (Pomerania, porti)</li>
+      <li>Ottenere compensazioni in denaro per smobilitare l'esercito</li>
+      <li>Garantire i diritti dei luterani nell'Impero</li>
+    </ul>
+    <ul class="warn-list">
+      <li>L'esercito mercenario costa moltissimo e va pagato</li>
+      <li>I principi protestanti non sono sempre alleati fidati</li>
+    </ul>
+    <div class="fbox"><strong>Feedback:</strong> La Svezia vince con territorio e denaro. Senza entrambi, è vittoria parziale. Se non ottiene nulla, la guerra ricomincia.</div>
+  </div>
+
+  <div id="rd-imp" class="rdet">
+    <hr class="divider">
+    <div class="badge ba">Impero asburgico — Ferdinando III</div>
+    <div class="note"><strong>Nota:</strong> Il "Sacro Romano Impero Germanico" è un'entità enorme ma frammentata in centinaia di principati. L'imperatore non governa direttamente: deve negoziare con i principi. È la principale potenza sconfitta. Il trattato riconoscerà ai principi il diritto di scegliere la propria religione — un colpo durissimo all'autorità imperiale.</div>
+    <ul class="arr-list">
+      <li>Salvare l'unità formale dell'Impero</li>
+      <li>Cedere il meno possibile in territorio</li>
+      <li>Limitare l'autonomia dei principi protestanti</li>
+    </ul>
+    <ul class="warn-list">
+      <li>Militarmente esausto dopo 30 anni di guerra</li>
+      <li>La Spagna non può più aiutarlo come prima</li>
+    </ul>
+    <div class="fbox"><strong>Feedback:</strong> L'Impero "vince" se firma la pace senza perdere territori tedeschi. Ma deve accettare che il suo potere sarà ridotto. L'obiettivo è limitare i danni.</div>
+  </div>
+
+  <div id="rd-sp" class="rdet">
+    <hr class="divider">
+    <div class="badge bc">Spagna — Filippo IV</div>
+    <div class="note"><strong>Nota:</strong> La Spagna del 1648 non è quella di Filippo II. Ha perso la guerra contro l'Olanda, ha subito bancarotte ripetute, il Portogallo si è ribellato nel 1640. A Westfalia firma la pace con l'Olanda — prima grande sconfitta storica. Continuerà la guerra contro la Francia fino al 1659.</div>
+    <ul class="arr-list">
+      <li>Riconoscere l'indipendenza delle Province Unite (doloroso ma necessario)</li>
+      <li>Mantenere i Paesi Bassi spagnoli e le posizioni in Italia</li>
+      <li>Evitare che la Francia diventi dominante</li>
+    </ul>
+    <ul class="warn-list">
+      <li>Bancarotta nel 1647. Ribellioni in Portogallo e Catalogna</li>
+      <li>Continua la guerra con la Francia dopo il congresso</li>
+    </ul>
+    <div class="fbox"><strong>Feedback:</strong> La Spagna è sulla difensiva. Vince se limita le perdite. Firmare la pace con l'Olanda è già una resa storica.</div>
+  </div>
+
+  <div id="rd-pp" class="rdet">
+    <hr class="divider">
+    <div class="badge bg">Stato Pontificio — Innocenzo X</div>
+    <div class="note"><strong>Nota:</strong> Il Papa è l'unica delegazione che protesterà contro i risultati con la bolla "Zelo Domus Dei" (1650). Sarà ignorata. "Cuius regio, eius religio" — chi governa sceglie la religione — era il principio del 1555, qui confermato ed esteso ai Calvinisti. Una sconfitta per la visione di un'Europa cattolica unita.</div>
+    <ul class="arr-list">
+      <li>Impedire il riconoscimento legale del protestantesimo</li>
+      <li>Proteggere i beni ecclesiastici confiscati</li>
+      <li>Mantenere influenza come mediatore</li>
+    </ul>
+    <ul class="warn-list">
+      <li>Nessun esercito credibile</li>
+      <li>Persino le potenze cattoliche ignorano le sue direttive politiche</li>
+    </ul>
+    <div class="fbox"><strong>Feedback:</strong> Il Papa non raggiunge i suoi obiettivi storici. La riflessione da guidare: perché? Cosa significa per il potere della Chiesa nel mondo moderno?</div>
+  </div>
+
+  <div id="rd-pr" class="rdet">
+    <hr class="divider">
+    <div class="badge bg">Principi protestanti — Brandeburgo, Sassonia…</div>
+    <div class="note"><strong>Nota:</strong> Non sono uno Stato unico: sono decine di principati. Brandeburgo diventerà il nucleo della futura Prussia. Il trattato sancirà la loro sovranità sui propri territori — compreso il diritto di fare alleanze straniere. È l'inizio della fine del Sacro Romano Impero come entità politica coerente.</div>
+    <ul class="arr-list">
+      <li>Autonomia religiosa garantita per trattato</li>
+      <li>Impedire che l'Imperatore riacquisti potere sui territori</li>
+      <li>Compensazioni territoriali (Pomerania, vescovati)</li>
+    </ul>
+    <ul class="warn-list">
+      <li>Non parlano con una voce sola — interessi divergenti</li>
+      <li>Dipendono dalla Svezia per la protezione militare</li>
+    </ul>
+    <div class="fbox"><strong>Feedback:</strong> Questo gruppo "crea" lo stato moderno. Westfalia è vista come l'atto di nascita del sistema degli stati sovrani. Vince se ottiene autonomia religiosa sancita per trattato.</div>
+  </div>
+</div>
+
+<div id="s-meccanica" class="screen">
+  <div class="card">
+    <div class="card-t">Come si gioca</div>
+    <div class="card-b">Il congresso si svolge in quattro fasi. Il docente gestisce i tempi e introduce le carte evento a sorpresa durante la sessione plenaria.</div>
+  </div>
+  <div style="margin:1.1rem 0">
+    <div class="ph-step"><div class="ph-num">1</div><div class="ph-c"><div class="pt">Preparazione — 10 min</div><div class="pd">Ogni gruppo legge la propria scheda. Il docente illustra il contesto. Si assegnano i ruoli interni: ambasciatore principale, consigliere, osservatore.</div></div></div>
+    <div class="ph-step"><div class="ph-num">2</div><div class="ph-c"><div class="pt">Negoziazioni bilaterali — 15 min</div><div class="pd">Le delegazioni si muovono liberamente. Si formano alleanze, si scambiano promesse, si fa pressione. Ogni gruppo annota gli accordi informali raggiunti.</div><div class="note" style="margin-top:.5rem"><strong>Regola chiave:</strong> le promesse non mantenibili sono lecite — esattamente come nella diplomazia reale. Il tradimento è una strategia legittima.</div></div></div>
+    <div class="ph-step"><div class="ph-num">3</div><div class="ph-c"><div class="pt">Sessione plenaria — 15 min</div><div class="pd">Tutte le delegazioni si riuniscono. Si propongono gli accordi. Il docente introduce le carte evento. Si vota su ogni clausola del trattato finale.</div></div></div>
+    <div class="ph-step"><div class="ph-num">4</div><div class="ph-c"><div class="pt">Output finale</div><div class="pd">Ogni gruppo formalizza: 1 alleanza principale, 1 cessione territoriale accettata, 1 clausola religiosa approvata. Si costruisce alla lavagna la mappa delle decisioni e si confronta con la storia reale.</div></div></div>
+  </div>
+  <div class="card">
+    <div class="card-t">Regole di base</div>
+    <ul class="arr-list">
+      <li>Non si può usare la forza militare: siamo al tavolo della pace</li>
+      <li>Ogni accordo deve essere firmato da entrambe le delegazioni</li>
+      <li>Il docente può bloccare accordi "storicamente impossibili"</li>
+      <li>Le carte evento cambiano le condizioni a sorpresa</li>
+    </ul>
+  </div>
+  <button class="btn btn-p" onclick="go('eventi',document.querySelectorAll('.nav-btn')[3])">Vai alle carte evento →</button>
+</div>
+
+<div id="s-eventi" class="screen">
+  <p style="font-size:14px;color:var(--color-text-secondary);margin-bottom:1.1rem;line-height:1.6">Il docente introduce queste carte a sorpresa durante la sessione plenaria. Clicca su ciascuna per aprire effetti e feedback.</p>
+
+  <div class="ev-card" onclick="this.classList.toggle('open')">
+    <div class="badge bc" style="font-size:11px;padding:2px 7px">crisi finanziaria</div>
+    <div class="et">La Spagna dichiara bancarotta</div>
+    <div class="ed">L'Impero perde il suo principale alleato economico. La Spagna deve accettare qualsiasi clausola pur di chiudere la guerra con l'Olanda. La Francia guadagna potere contrattuale.
+    <div class="note" style="margin-top:.6rem"><strong>Nota:</strong> Storicamente vero — quinta bancarotta spagnola del secolo. L'argento americano transitava per la Spagna ma finiva ai creditori stranieri che finanziavano le guerre.</div>
+    <div class="fbox"><strong>Domanda:</strong> Perché un paese ricchissimo di colonie va in bancarotta? Apre la discussione sul rapporto tra debito, guerra e risorse.</div></div>
+  </div>
+
+  <div class="ev-card" onclick="this.classList.toggle('open')">
+    <div class="badge bt" style="font-size:11px;padding:2px 7px">riconoscimento storico</div>
+    <div class="et">Le Province Unite chiedono indipendenza formale</div>
+    <div class="ed">La Spagna deve scegliere: riconoscere l'Olanda perdendo prestigio, o continuare la guerra contro una potenza economicamente superiore.
+    <div class="note" style="margin-top:.6rem"><strong>Nota:</strong> L'Olanda del 1648 è già la prima potenza commerciale marittima del mondo. La VOC (Compagnia delle Indie Orientali) è più ricca di molti stati europei. La Guerra degli Ottant'anni (1568–1648) si chiude qui.</div>
+    <div class="fbox"><strong>Domanda:</strong> Riconoscere un nemico come stato legittimo è una delle decisioni più difficili in diplomazia. Cosa si guadagna? Cosa si perde?</div></div>
+  </div>
+
+  <div class="ev-card" onclick="this.classList.toggle('open')">
+    <div class="badge bg" style="font-size:11px;padding:2px 7px">crisi religiosa</div>
+    <div class="et">Il Papa minaccia di scomunicare chi firma</div>
+    <div class="ed">Le delegazioni cattoliche (Francia, Spagna, Impero) decidono se temere la scomunica o ignorarla. Ogni delegazione cattolica vota internamente.
+    <div class="note" style="margin-top:.6rem"><strong>Nota:</strong> Storicamente, nessuno si fermò. La bolla "Zelo Domus Dei" (1650) fu ignorata. Nel 1076 Enrico IV aspettò tre giorni nella neve a Canossa per il perdono papale. Nel 1648 nessuno si preoccupa.</div>
+    <div class="fbox"><strong>Domanda:</strong> Cosa è cambiato in 600 anni nel rapporto tra autorità religiosa e politica?</div></div>
+  </div>
+
+  <div class="ev-card" onclick="this.classList.toggle('open')">
+    <div class="badge ba" style="font-size:11px;padding:2px 7px">pressione militare</div>
+    <div class="et">L'esercito svedese avanza verso Vienna</div>
+    <div class="ed">La Svezia ottiene un turno con bonus negoziale. L'Impero deve fare una concessione entro il turno o la guerra riprende.
+    <div class="note" style="margin-top:.6rem"><strong>Nota:</strong> Accaduto davvero: nel 1648 le truppe svedesi occuparono parte di Praga mentre si negoziava. Una mossa di pressione deliberata.</div>
+    <div class="fbox"><strong>Domanda:</strong> Come cambia una negoziazione quando uno dei partecipanti ha un esercito alle porte?</div></div>
+  </div>
+
+  <div class="ev-card" onclick="this.classList.toggle('open')">
+    <div class="badge bc" style="font-size:11px;padding:2px 7px">crisi interna</div>
+    <div class="et">Scoppia la Fronde in Francia</div>
+    <div class="ed">La Francia perde un bonus diplomatico per un turno. Deve firmare il prima possibile per liberare risorse per l'interno.
+    <div class="note" style="margin-top:.6rem"><strong>Nota:</strong> La Fronde (1648–1653) è la rivolta di nobiltà e parlamenti contro Mazarino. Forgerà Luigi XIV: da adulto costruirà Versailles e il governo assoluto per non ripetere l'umiliazione di fuggire da Parigi da bambino.</div>
+    <div class="fbox"><strong>Domanda:</strong> Politica estera e interna sono sempre legate. Un paese in crisi interna è debole all'estero. Esempi contemporanei?</div></div>
+  </div>
+
+  <div class="ev-card" onclick="this.classList.toggle('open')">
+    <div class="badge bp" style="font-size:11px;padding:2px 7px">novità giuridica</div>
+    <div class="et">I principi rivendicano il diritto di votare il trattato</div>
+    <div class="ed">L'Imperatore perde una concessione verso i principi protestanti. In cambio ottiene la firma senza opposizione interna.
+    <div class="note" style="margin-top:.6rem"><strong>Nota:</strong> Il trattato sancirà de facto la sovranità dei principi sui propri territori, compreso il diritto di fare alleanze straniere. È l'inizio della fine del Sacro Romano Impero come entità politica coerente.</div>
+    <div class="fbox"><strong>Domanda:</strong> Westfalia è l'atto di nascita dello stato moderno. Cosa significa che ogni principe è sovrano nel proprio territorio?</div></div>
+  </div>
+
+  <button class="btn btn-p" style="margin-top:.5rem" onclick="go('verifica',document.querySelectorAll('.nav-btn')[4])">Vai alla verifica →</button>
+</div>
+
+<div id="s-verifica" class="screen">
+  <div class="prog-lbl" id="prog-lbl">Domanda 1 di 12</div>
+  <div class="prog-wrap"><div class="prog-fill" id="prog-fill" style="width:8%"></div></div>
+  <div id="quiz-area"></div>
+</div>
+
+<div id="s-debrief" class="screen">
+  <div class="card">
+    <div class="card-t">Debrief guidato</div>
+    <div class="card-b">Da fare in cerchio alla fine del gioco. Clicca su una domanda per approfondirla con Claude.</div>
+  </div>
+  <div style="margin-top:1rem">
+    <div class="dq" onclick="sendPrompt('Chi ha vinto davvero il Congresso di Westfalia del 1648? Spiegami quali delegazioni uscirono rafforzate e quali no, e perché')">Chi ha "vinto" davvero il congresso? Spiegami delegazione per delegazione ↗</div>
+    <div class="dq" onclick="sendPrompt('Spiega come il trattato di Westfalia ha cambiato il ruolo politico del Papa in Europa, e perché la bolla Zelo Domus Dei del 1650 fu ignorata')">Il Papa protesta e viene ignorato. Cosa cambia per la Chiesa? ↗</div>
+    <div class="dq" onclick="sendPrompt('Spiega il principio cuius regio eius religio e come viene modificato dal trattato di Westfalia del 1648 rispetto alla Pace di Augusta del 1555')">Cosa cambia nel principio cuius regio eius religio rispetto al 1555? ↗</div>
+    <div class="dq" onclick="sendPrompt('Perché la pace di Westfalia del 1648 è considerata la nascita del sistema degli stati moderni e del principio di sovranità statale')">Perché Westfalia è "la nascita dello stato moderno"? ↗</div>
+    <div class="dq" onclick="sendPrompt('Il principio westfaliano di non interferenza negli affari interni è ancora valido oggi? Portami esempi contemporanei dove è stato rispettato o violato')">Il principio di non interferenza vale ancora oggi? Esempi contemporanei ↗</div>
+    <div class="dq" onclick="sendPrompt('Cosa succede alla Spagna dopo il 1648? Come avviene il suo declino come potenza egemone europea nel corso del Seicento e Settecento')">Cosa succede alla Spagna dopo il 1648? ↗</div>
+    <div class="dq" onclick="sendPrompt('Descrivimi le conseguenze demografiche e materiali della Guerra dei Trentanni in Germania: quante persone morirono, quali regioni furono più colpite')">Che devastazione lasciò la Guerra dei Trent'anni? ↗</div>
+  </div>
+  <hr class="divider">
+  <div class="card" style="margin-top:0">
+    <div class="card-t">Output finale da costruire insieme</div>
+    <ul class="arr-list">
+      <li>Mappa delle cessioni territoriali decise nel gioco vs quelle storiche reali</li>
+      <li>Tabella: obiettivi di ogni delegazione — raggiunto / parziale / fallito</li>
+      <li>Una frase per gruppo: "abbiamo imparato che la diplomazia è…"</li>
+      <li>Confronto: cosa avete deciso voi vs cosa decise la storia nel 1648</li>
+    </ul>
+  </div>
+</div>
+</div>
+
+<script>
+function go(id, btn){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('s-'+id).classList.add('active');
+  if(btn) btn.classList.add('active');
+  if(id==='verifica' && !quizStarted){ quizStarted=true; renderQ(); }
+}
+
+function toggleRole(id){
+  const el=document.getElementById('rd-'+id);
+  const wasOpen=el.classList.contains('open');
+  document.querySelectorAll('.rdet').forEach(d=>d.classList.remove('open'));
+  if(!wasOpen){ el.classList.add('open'); el.scrollIntoView({behavior:'smooth',block:'nearest'}); }
+}
+
+const QS=[
+  {type:'mc',sec:'Comprensione',bc:'bt',q:'Perché il congresso si tenne in due città diverse (Münster e Osnabrück) anziché in una sola?',
+   opts:['Per motivi geografici: le due città erano più raggiungibili dalle delegazioni','Perché cattolici e protestanti si rifiutavano di condividere la stessa sede','Per avere più spazio fisico per tutte le delegazioni','Per decisione dell\'imperatore che voleva dividere i negoziati'],
+   cor:1,
+   ok:'Esatto. La doppia sede riflette la frattura religiosa: cattolici e protestanti non volevano condividere nemmeno lo spazio fisico delle trattative. Münster ospitò i negoziati con la Francia e le potenze cattoliche; Osnabrück quelli con la Svezia e i principi protestanti. È un dettaglio che rivela quanto la religione fosse un elemento politico concreto, non solo spirituale.',
+   no:'Non esattamente. Il motivo era religioso: cattolici e protestanti si rifiutavano di condividere la stessa città. Questo dettaglio rivela quanto la frattura religiosa fosse concreta — aveva effetti pratici persino su dove ci si sedeva a trattare.',
+   ex:'Prima di Westfalia non esisteva nulla di simile a un congresso multilaterale permanente. Le paci si firmavano bilateralmente. Westfalia inventa il formato del congresso diplomatico moderno — con tutte le sue complicazioni.'},
+  {type:'mc',sec:'Comprensione',bc:'bt',q:'Quale potenza uscì più rafforzata in termini territoriali nel nord Europa?',
+   opts:['La Francia, che ottenne tutta l\'Alsazia e la Lorena','La Svezia, che consolidò il controllo sul Mar Baltico con la Pomerania','L\'Impero, che mantenne tutti i suoi territori','La Spagna, che ottenne i Paesi Bassi del nord'],
+   cor:1,
+   ok:'Corretto. La Svezia fu la grande vincitrice militare. Da piccolo regno nordico era diventata la potenza dominante del Baltico grazie alle campagne di Gustavo II Adolfo. A Westfalia ottenne la Pomerania occidentale e i porti sull\'Oder, consolidando il controllo sul commercio baltico.',
+   no:'La Svezia fu la vera vincitrice militare: ottenne la Pomerania e i principali porti sul Baltico. La Francia ottenne solo parte dell\'Alsazia, l\'Impero subì perdite, la Spagna cedette l\'Olanda.',
+   ex:'La Svezia però era sovraestesa. La sua egemonia baltica sarà messa in crisi da Pietro il Grande di Russia all\'inizio del Settecento — traiettoria tipica delle potenze che crescono troppo velocemente su basi fragili.'},
+  {type:'mc',sec:'Comprensione',bc:'bt',q:'Cosa significava "cuius regio, eius religio", il principio che Westfalia confermò ed estese?',
+   opts:['Il Papa sceglie la religione di ogni Stato europeo','Il sovrano di un territorio sceglie la confessione praticata in quel territorio','I cittadini scelgono liberamente la propria religione ovunque in Europa','L\'Imperatore impone il cattolicesimo a tutti i principi'],
+   cor:1,
+   ok:'Giusto. Il principio, già sancito con la Pace di Augusta del 1555, stabiliva che il signore del territorio decide la religione. Westfalia lo confermò e lo estese anche ai Calvinisti. Il risultato era paradossale: non garantiva libertà individuale di coscienza — chi non condivideva la fede del principe era libero di emigrare, ma non di restare.',
+   no:'La risposta corretta è la seconda. "Cuius regio, eius religio" significa letteralmente "di chi è il territorio, di lui è la religione". Non era libertà individuale, né potere papale: era sovranità territoriale applicata alla fede.',
+   ex:'Questo principio va distinto dalla moderna libertà religiosa. Nel 1648 non si affermava che ogni individuo può credere ciò che vuole. La libertà individuale di coscienza come diritto universale arriverà con l\'Illuminismo, molto dopo.'},
+  {type:'assoc',sec:'Relazioni causali',bc:'ba',q:'Abbina ogni delegazione al suo principale obiettivo a Westfalia.',
+   note:'Clicca un elemento di sinistra, poi uno di destra per abbinarli.',
+   pairs:[['Svezia','Controllo dei porti baltici e compensazioni in denaro'],['Stato Pontificio','Impedire il riconoscimento legale del protestantesimo'],['Principi protestanti','Autonomia religiosa sancita per trattato'],['Francia','Indebolire gli Asburgo e territori sul Reno']],
+   ok:'Perfetto. La Svezia vuole compensazioni concrete (territori e denaro per smobilitare l\'esercito); il Papa vuole bloccare qualsiasi riconoscimento del protestantesimo (obiettivo che non raggiungerà); i principi vogliono autonomia garantita per trattato (e la otterranno); la Francia vuole indebolire gli Asburgo — paradosso di una potenza cattolica che combatte contro l\'Imperatore cattolico.',
+   no:'Alcune associazioni non sono corrette. Riprova: Svezia → porti baltici e denaro; Papa → bloccare i protestanti; Principi → autonomia religiosa; Francia → ridimensionare gli Asburgo.',
+   ex:'Il contrasto più istruttivo è tra obiettivi e risultati: il Papa è l\'unico che non ottiene nulla di quanto voleva, e la sua protesta formale viene ignorata. Questo silenzio eloquente segna un momento di svolta nella storia del potere politico della Chiesa.'},
+  {type:'mc',sec:'Relazioni causali',bc:'ba',q:'La Francia era cattolica eppure combatté fianco ai protestanti contro l\'Imperatore cattolico. Come si spiega?',
+   opts:['Il re si era convertito in segreto al protestantesimo','La Francia mirava a indebolire gli Asburgo per ragioni di potere, indipendentemente dalla religione','Era stata scomunicata e non aveva più legami con il cattolicesimo','Era costretta dai trattati con la Svezia a combattere'],
+   cor:1,
+   ok:'Esattamente. La politica estera francese — guidata da Richelieu poi da Mazarino — seguiva una logica di potenza (Realpolitik) che metteva gli interessi nazionali davanti alla solidarietà religiosa. La Francia temeva di essere circondata dagli Asburgo (Spagna a sud-ovest, Impero a est) e cercava di spezzare questo accerchiamento sostenendo chiunque si opponesse a loro.',
+   no:'La spiegazione corretta è la seconda. Richelieu e Mazarino sostenevano i protestanti non per ragioni religiose, ma per indebolire gli Asburgo che circondavano la Francia.',
+   ex:'Questo comportamento scandalizzò i contemporanei, ma rappresenta un momento fondativo: l\'idea che gli stati perseguano interessi propri, non ideologici, diventerà il principio base della diplomazia moderna.'},
+  {type:'open',sec:'Relazioni causali',bc:'ba',q:'La Spagna nel 1648 dichiara bancarotta eppure aveva le colonie d\'argento. Come si spiega questa contraddizione? Ragiona liberamente.',pl:'Scrivi la tua riflessione...',
+   fb:'Una risposta ricca coglie almeno due di questi nodi:\n\n1. Le guerre continue consumavano risorse più velocemente di quanto arrivassero dalle colonie.\n2. L\'argento americano transitava per la Spagna ma finiva ai creditori stranieri (banchieri genovesi, famiglia Fugger) che finanziavano le campagne militari.\n3. L\'inflazione causata dall\'afflusso di metalli preziosi aveva eroso il potere d\'acquisto interno.\n4. L\'Impero spagnolo era geograficamente sovraesteso e costosissimo da mantenere.\n\nUna risposta eccellente può aggiungere che si tratta di un caso ante litteram di "maledizione delle risorse": avere ricchezze facili può indebolire un sistema economico se non si investe nella produzione interna.',
+   ex:'Questo tema ha connessioni potenti con il presente: paesi ricchi di petrolio o materie prime che rimangono instabili politicamente ripropongono dinamiche simili. Il caso spagnolo del Seicento è un punto di ingresso eccellente.'},
+  {type:'mc',sec:'Ragionamento storico',bc:'bc',q:'Il Papa protestò contro il trattato con la bolla "Zelo Domus Dei" (1650), ma fu completamente ignorato. Cosa dimostra questo episodio?',
+   opts:['Che il Papa aveva perso ogni influenza spirituale sui cattolici','Che l\'autorità politica del Papa sugli stati era ormai tramontata, indipendentemente dall\'autorità religiosa','Che la bolla fu un errore diplomatico che indebolì ulteriormente la posizione papale','Che i re cattolici erano diventati protestanti in segreto'],
+   cor:1,
+   ok:'Ottima risposta. Il Papa non perde la sua autorità religiosa e spirituale. Perde la capacità di influenzare le decisioni politiche degli stati. Si stava separando la sfera religiosa da quella statale — un processo di secolarizzazione della politica che sarà teorizzato dai filosofi illuministi nel secolo successivo.',
+   no:'La risposta più precisa è la seconda. Il Papa non perse la sua autorità spirituale — i fedeli continuarono a riconoscerlo come guida religiosa. Ciò che tramontò fu la sua capacità di dettare scelte politiche ai sovrani.',
+   ex:'Nel 1076 Enrico IV rimase tre giorni scalzo nella neve a Canossa per ottenere il perdono papale. Nel 1648 re cattolici ignorano la protesta del Papa senza conseguenze. In mezzo c\'è tutta la Riforma, le guerre di religione, e la nascita dello stato moderno laico.'},
+  {type:'mc',sec:'Ragionamento storico',bc:'bc',q:'Westfalia è considerata "l\'atto di nascita del sistema degli stati moderni". Quale principio fondamentale sancisce per giustificare questa definizione?',
+   opts:['Stabilisce un esercito europeo comune contro i Turchi','Riconosce la sovranità di ogni stato sul proprio territorio e il principio di non interferenza negli affari interni','Crea un parlamento europeo dove i sovrani si riuniscono ogni anno','Stabilisce il primato del Papa come arbitro supremo delle dispute'],
+   cor:1,
+   ok:'Corretto. Il trattato sancisce che ogni stato è sovrano nel proprio territorio e che le potenze straniere — inclusa la Chiesa — non hanno diritto di interferire nelle sue scelte interne. Questo principio "westfaliano" diventerà la base del diritto internazionale moderno.',
+   no:'La risposta giusta è la seconda. Il principio fondamentale è la sovranità territoriale e la non interferenza negli affari interni. Non si creò nessun esercito comune, nessun parlamento, e il Papa vide anzi ridursi il suo potere.',
+   ex:'Quanto è attuale questo principio? Quando uno stato perseguita una minoranza, gli altri stati "non devono interferire"? Il dibattito sulla Responsabilità di Proteggere (R2P) nelle Nazioni Unite è ancora aperto e parte esattamente da questa tensione nata a Westfalia nel 1648.'},
+  {type:'open',sec:'Ragionamento storico',bc:'bc',q:'Nel gioco avete negoziato come diplomatici. Cosa è più difficile nella diplomazia reale rispetto alla simulazione? Cosa manca nel gioco che nella realtà fa la differenza?',pl:'Scrivi le tue osservazioni...',
+   fb:'Una risposta ricca può toccare diversi aspetti:\n\n1. Il tempo — a Westfalia i negoziati durarono cinque anni (1643–1648), non un\'ora di lezione. La pressione del tempo cambia le decisioni.\n2. Le asimmetrie di informazione — le delegazioni non sapevano cosa si offriva nelle altre trattative. Le reti di spionaggio erano fondamentali.\n3. La pressione interna — ogni diplomatico risponde a qualcuno: un re, un parlamento, un esercito da pagare.\n4. Le conseguenze reali — nel gioco si può "perdere" senza conseguenze; nella realtà si perdevano territori, vite, potere per generazioni.\n\nUna risposta matura può notare che nel gioco le identità sono fisse, nella realtà i diplomatici sono persone con caratteri e paure proprie che influenzano le trattative.',
+   ex:'Questa domanda apre a una riflessione metodologica: il role play semplifica per rendere comprensibile, ma ogni semplificazione esclude qualcosa. Riconoscere cosa è stato semplificato è già una forma di pensiero storico avanzato.'},
+  {type:'mc',sec:'Riflessione critica',bc:'bp',q:'Se la Svezia non avesse partecipato alla Guerra dei Trent\'anni, come sarebbe probabilmente cambiato l\'esito del conflitto?',
+   opts:['L\'esito sarebbe stato identico: la Francia da sola era sufficiente','L\'Impero asburgico avrebbe con ogni probabilità prevalso, riunificando l\'Impero sotto il cattolicesimo','La guerra sarebbe finita molto prima con una pace favorevole ai protestanti','La Spagna sarebbe diventata la potenza incontrastata'],
+   cor:1,
+   ok:'È la risposta storicamente più difendibile. La Svezia entrò in guerra nel 1630, quando le forze imperiali stavano vincendo e i protestanti erano sull\'orlo della sconfitta. L\'intervento svedese rovesciò le sorti militari. Senza di essa, l\'Imperatore avrebbe probabilmente imposto il cattolicesimo a gran parte dell\'Impero, come intendeva l\'Editto di Restituzione del 1629.',
+   no:'La risposta più solida storicamente è la seconda. La Svezia fu l\'elemento che rovesciò le sorti nel momento più critico (1630). Senza di essa, l\'Imperatore stava vincendo.',
+   ex:'Le domande controfattuali ("cosa sarebbe successo se…") sono uno strumento storico legittimo. Servono a capire le cause: se rimuoviamo un fattore e l\'esito cambia, quel fattore era decisivo. Si chiama analisi controfattuale ed è usata dagli storici per valutare il peso relativo delle cause.'},
+  {type:'open',sec:'Riflessione critica',bc:'bp',q:'Il principio westfaliano di "non interferenza negli affari interni" è ancora valido oggi? Pensa a casi contemporanei in cui si discute se uno stato straniero abbia il diritto (o il dovere) di intervenire.',pl:'La tua riflessione...',
+   fb:'Questa domanda non ha una risposta "giusta" univoca — è progettata per stimolare il ragionamento. Una risposta matura riconosce la tensione fondamentale:\n\nDa un lato il principio di sovranità ha evitato guerre di aggressione giustificate da pretesti ideologici. Dall\'altro, applicato rigidamente, permette a stati di commettere atrocità verso i propri cittadini senza conseguenze esterne.\n\nCasi rilevanti: il genocidio ruandese del 1994 (nessun intervento); la NATO in Kosovo nel 1999 (intervento senza mandato ONU); la Responsabilità di Proteggere (R2P) adottata dall\'ONU nel 2005; la guerra in Ucraina dal 2022.\n\nUna risposta eccellente mostra che non esiste soluzione semplice: sia il rispetto assoluto della sovranità che l\'interventismo illimitato portano a problemi gravi.',
+   ex:'Se gli studenti riescono a vedere in una crisi contemporanea l\'eco di un principio sancito nel 1648, la storia ha fatto il suo lavoro.'},
+  {type:'mc',sec:'Riflessione critica',bc:'bp',q:'Quale delle seguenti affermazioni descrive meglio il significato storico del 1648?',
+   opts:['Il 1648 segna la fine delle guerre di religione e l\'inizio di un\'era di pace duratura','Il 1648 segna la nascita di un nuovo ordine basato su stati sovrani e sulla separazione tra potere religioso e politico, ma non la fine dei conflitti','Il 1648 è importante solo per la Germania, che subì le maggiori distruzioni','Il 1648 segna la vittoria definitiva del protestantesimo sul cattolicesimo in Europa'],
+   cor:1,
+   ok:'Perfetto. Il 1648 è importante non perché porta la pace (Francia e Spagna si combattono fino al 1659), ma perché ridisegna le regole del gioco: la religione non è più il principale asse dei conflitti, gli stati sono sovrani, la Chiesa non ha più potere politico diretto. È una trasformazione strutturale, non una tregua.',
+   no:'La risposta più accurata è la seconda. Il 1648 non portò pace duratura e non fu vittoria del protestantesimo. Fu la nascita di un nuovo sistema basato sulla sovranità statale e sulla separazione tra sfera religiosa e politica.',
+   ex:'Vale la pena chiedersi: moderna per chi? I milioni di contadini tedeschi morti di guerra, carestia e malattia non videro granché di questo progresso. La storia dei trattati è la storia dei potenti. La storia dei più deboli è spesso altrove.'}
+];
+
+let quizStarted=false, cur=0, score=0, answered=0, answers=[], aLeft=null, aRight=null, aState={};
+
+function upProg(){
+  const pct=Math.round(((cur+1)/QS.length)*100);
+  document.getElementById('prog-fill').style.width=pct+'%';
+  document.getElementById('prog-lbl').textContent='Domanda '+(cur+1)+' di '+QS.length;
+}
+
+function renderQ(){
+  upProg();
+  const q=QS[cur];
+  let h='<div class="q-block">';
+  h+='<div class="sec-lbl"><span class="badge '+q.bc+'" style="margin:0 8px 0 0">'+q.sec+'</span></div>';
+  h+='<div class="q-num">Domanda '+(cur+1)+'</div>';
+  h+='<div class="q-txt">'+q.q+'</div>';
+  if(q.note) h+='<div class="q-note">'+q.note+'</div>';
+  if(q.type==='mc'){
+    h+='<div class="opts" id="opts">';
+    q.opts.forEach((o,i)=>{ h+='<button class="opt" onclick="answerMC('+i+')" id="opt-'+i+'">'+o+'</button>'; });
+    h+='</div>';
+  } else if(q.type==='open'){
+    h+='<textarea class="open-inp" id="open-ans" placeholder="'+q.pl+'"></textarea>';
+    h+='<br><button class="btn btn-p" onclick="answerOpen()" style="margin-top:.6rem">Invia risposta</button>';
+  } else if(q.type==='assoc'){
+    aLeft=null; aRight=null; aState={matched:[],wrongCount:0};
+    const lefts=q.pairs.map(p=>p[0]);
+    const rights=[...q.pairs.map(p=>p[1])].sort(()=>Math.random()-.5);
+    h+='<div class="assoc-grid"><div><div class="assoc-clbl">Delegazione</div>';
+    lefts.forEach((l,i)=>{ h+='<button class="ai" id="al-'+i+'" onclick="assocL('+i+',this)">'+l+'</button>'; });
+    h+='</div><div><div class="assoc-clbl">Obiettivo</div>';
+    rights.forEach((r,i)=>{ h+='<button class="ai" id="ar'+i+'" data-v="'+escQ(r)+'" onclick="assocR(this)">'+r+'</button>'; });
+    h+='</div></div>';
+    h+='<div id="a-status" style="font-size:13px;color:var(--color-text-secondary);min-height:18px;margin-bottom:.5rem"></div>';
+  }
+  h+='<div class="fb" id="fb"><div class="fb-title" id="fb-t"></div><div class="fb-body" id="fb-b"></div><div class="fb-extra" id="fb-e" style="display:none"></div></div>';
+  const isLast=cur>=QS.length-1;
+  h+='<button class="btn '+(isLast?'btn-p':'')+'" id="next-btn" style="display:none;margin-top:.75rem" onclick="'+(isLast?'showScore()':'nextQ()')+'">'+( isLast?'Vedi il riepilogo →':'Prossima domanda →')+'</button>';
+  h+='</div>';
+  document.getElementById('quiz-area').innerHTML=h;
+}
+
+function escQ(s){return s.replace(/'/g,"&#39;");}
+
+function showFb(state, main, extra){
+  const fb=document.getElementById('fb');
+  fb.className='fb show fb-'+(state==='ok'?'ok':state==='no'?'no':'op');
+  document.getElementById('fb-t').textContent=state==='ok'?'Corretto':state==='no'?'Non esattamente':'Riflessione guidata';
+  document.getElementById('fb-b').innerHTML=main.replace(/\n/g,'<br>');
+  const fe=document.getElementById('fb-e');
+  if(extra){ fe.innerHTML='<strong>Per approfondire:</strong> '+extra.replace(/\n/g,'<br>'); fe.style.display='block'; }
+  document.getElementById('next-btn').style.display='inline-block';
+}
+
+function answerMC(i){
+  const q=QS[cur];
+  document.querySelectorAll('.opt').forEach(o=>o.disabled=true);
+  const ok=i===q.cor;
+  document.getElementById('opt-'+i).classList.add(ok?'correct':'wrong');
+  if(!ok) document.getElementById('opt-'+q.cor).classList.add('missed');
+  if(ok) score++;
+  answered++; answers.push({q:cur,correct:ok});
+  showFb(ok?'ok':'no', ok?q.ok:q.no, q.ex||null);
+}
+
+function answerOpen(){
+  const val=document.getElementById('open-ans').value.trim();
+  if(!val) return;
+  document.getElementById('open-ans').disabled=true;
+  document.querySelector('.btn-p').disabled=true;
+  answered++; answers.push({q:cur,correct:null});
+  showFb('op', QS[cur].fb, QS[cur].ex||null);
+}
+
+let selLeft=null;
+function assocL(i, el){
+  if(aState.matched && aState.matched.includes('l'+i)) return;
+  document.querySelectorAll('.ai:not(.matched)').forEach(e=>e.classList.remove('sel'));
+  selLeft={i, val:QS[cur].pairs[i][0], el};
+  el.classList.add('sel');
+  if(selRight) tryAssoc();
+}
+let selRight=null;
+function assocR(el){
+  if(el.classList.contains('matched')) return;
+  document.querySelectorAll('.ai:not(.matched)').forEach(e=>e.classList.remove('sel'));
+  selRight={val:el.dataset.v, el};
+  el.classList.add('sel');
+  if(selLeft) tryAssoc();
+}
+function tryAssoc(){
+  const q=QS[cur];
+  const pair=q.pairs.find(p=>p[0]===selLeft.val);
+  const ok=pair && pair[1]===selRight.val;
+  if(ok){
+    selLeft.el.classList.remove('sel'); selLeft.el.classList.add('matched'); selLeft.el.disabled=true;
+    selRight.el.classList.remove('sel'); selRight.el.classList.add('matched'); selRight.el.disabled=true;
+    aState.matched.push('l'+selLeft.i);
+    if(aState.matched.length===q.pairs.length){
+      score++; answered++; answers.push({q:cur,correct:true});
+      showFb('ok', q.ok, q.ex||null);
+    } else {
+      document.getElementById('a-status').textContent=aState.matched.length+' di '+q.pairs.length+' abbinamenti corretti';
+    }
+  } else {
+    selLeft.el.classList.add('wmatch'); selRight.el.classList.add('wmatch');
+    setTimeout(()=>{ selLeft.el.classList.remove('wmatch','sel'); selRight.el.classList.remove('wmatch','sel'); },650);
+    document.getElementById('a-status').textContent='Abbinamento non corretto, riprova';
+  }
+  selLeft=null; selRight=null;
+}
+
+function nextQ(){ cur++; renderQ(); }
+
+function showScore(){
+  const total=QS.filter(q=>q.type!=='open').length;
+  const pct=Math.round((score/total)*100);
+  let msg, mc;
+  if(pct>=85){msg='Ottima padronanza degli eventi e dei concetti chiave di Westfalia. Sai collegare cause, attori e conseguenze con sicurezza.';mc='#085041';}
+  else if(pct>=60){msg='Buona comprensione del quadro generale. Rileggi le delegazioni con obiettivi meno chiari e approfondisci il significato strutturale del trattato.';mc='#633806';}
+  else{msg='Il contesto storico ha bisogno di qualche ripasso. Riparti dalle schede delle delegazioni e concentrati su chi voleva cosa e perché.';mc='#712B13';}
+  const openC=answers.filter(a=>a.correct===null).length;
+  const corC=answers.filter(a=>a.correct===true).length;
+  const wrongC=answers.filter(a=>a.correct===false).length;
+  document.getElementById('quiz-area').innerHTML=
+    '<div class="score-panel">'+
+    '<div class="score-big">'+pct+'%</div>'+
+    '<div class="score-sub">'+score+' esatte su '+total+' domande valutabili</div>'+
+    '<div class="score-grid">'+
+    '<div class="sc"><div class="sn">'+corC+'</div><div class="sl">Corrette</div></div>'+
+    '<div class="sc"><div class="sn">'+wrongC+'</div><div class="sl">Errate</div></div>'+
+    '<div class="sc"><div class="sn">'+openC+'</div><div class="sl">Aperte</div></div>'+
+    '</div>'+
+    '<div class="score-msg" style="color:'+mc+'">'+msg+'</div>'+
+    '</div>'+
+    '<div style="margin-top:1rem">'+
+    '<button class="btn btn-p" onclick="sendPrompt(\'Voglio ripassare il Congresso di Westfalia 1648: spiegami i punti che mi sono sembrati più difficili nella verifica\')">Ripasso guidato ↗</button>'+
+    '<button class="btn" style="margin-left:8px" onclick="restartQuiz()">Ricomincia</button>'+
+    '<button class="btn" style="margin-left:8px" onclick="go(\'debrief\',document.querySelectorAll(\'.nav-btn\')[5])">Vai al debrief →</button>'+
+    '</div>';
+  document.getElementById('prog-lbl').textContent='Completato';
+  document.getElementById('prog-fill').style.width='100%';
+}
+
+function restartQuiz(){ cur=0;score=0;answered=0;answers=[];aLeft=null;aRight=null;aState={};selLeft=null;selRight=null; renderQ(); }
+</script>
